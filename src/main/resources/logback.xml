@@ -1,0 +1,20 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Uncomment the following lines to enable DEBUG logging for specific packages -->
+    <!--
+    <logger name="com.astrapay" level="DEBUG" />
+    -->
+    <!-- Uncomment the following lines to enable TRACE logging for specific packages -->
+    <!--
+    <logger name="com.astrapay" level="TRACE" />
+    -->
+</configuration>
