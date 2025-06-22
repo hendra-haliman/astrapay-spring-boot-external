@@ -1,5 +1,7 @@
 package com.astrapay.dto;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
@@ -11,4 +13,6 @@ public class NoteDto {
 
     @NotEmpty
     private String content;
+
+    private Date createdAt;
 }

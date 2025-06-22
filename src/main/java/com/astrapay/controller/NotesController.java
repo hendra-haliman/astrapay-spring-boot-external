@@ -1,5 +1,6 @@
 package com.astrapay.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,13 +64,14 @@ public class NotesController {
             @ApiResponse(code = 201, message = "Created", response = NoteDto.class),
             @ApiResponse(code = 400, message = "Bad Request")
     })
-    public ResponseEntity<?> createNote(NoteDto noteDto) {
+    public ResponseEntity<?> createNote(@RequestBody NoteDto noteDto) {
         log.info("Creating a new note: " + noteDto);
 
         try {
             Note note = new Note();
             note.setTitle(noteDto.getTitle());
             note.setContent(noteDto.getContent());
+            note.setCreatedAt(new Date());
 
             Note createdNote = notesService.createNote(note);
 
