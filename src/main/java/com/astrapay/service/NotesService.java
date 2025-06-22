@@ -83,6 +83,7 @@ public class NotesService {
     public Note getNoteById(Long id) {
         log.info("Fetching note with ID: " + id);
 
-        return new Note();
+        return noteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Note not found with ID: " + id));
     }
 }

@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,28 @@ public class NotesController {
         }
     }
 
+    @GetMapping("/notes/{id}")
+    @ApiOperation(value = "Get Note by ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = NoteDto.class),
+            @ApiResponse(code = 404, message = "Note not Found")
+    })
+    public ResponseEntity<?> getNoteById(@PathVariable Long id) {
+        log.info("Getting note with ID: " + id);
+
+        try {
+            Note note = notesService.getNoteById(id);
+            if (note == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note not found");
+            }
+
+            return ResponseEntity.ok(note);
+
+        } catch (ExampleException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/notes")
     @ApiOperation(value = "Create Note")
     @ApiResponses(value = {
@@ -97,6 +121,35 @@ public class NotesController {
 
         } catch (ExampleException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/notes/{id}")
+    @ApiOperation(value = "Update Note")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = NoteDto.class),
+            @ApiResponse(code = 404, message = "Note not Found"),
+            @ApiResponse(code = 400, message = "Bad Request")
+    })
+    public ResponseEntity<?> updateNote(@PathVariable Long id, @RequestBody NoteDto noteDto) {
+        log.info("Updating note with ID: " + id + " to " + noteDto);
+
+        try {
+            Note existingNote = notesService.getNoteById(id);
+            if (existingNote == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note not found");
+            }
+
+            existingNote.setTitle(noteDto.getTitle());
+            existingNote.setContent(noteDto.getContent());
+            // existingNote.setUpdatedAt(new Date());
+
+            Note updatedNote = notesService.updateNote(id, existingNote);
+
+            return ResponseEntity.ok(updatedNote);
+
+        } catch (ExampleException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
